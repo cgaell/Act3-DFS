@@ -6,12 +6,16 @@ const PORT = 3000;
 // 1. Importa tus rutas de JS (estos sí llevan require)
 const usuariosRouter = require('./users.js'); 
 
+const productosRouter = require('./products.js');
+
 // 2. Configura la carpeta 'front' para que Express sirva el HTML, CSS y JS
 // Esto reemplaza la necesidad de hacer require del index.html
 app.use(express.static(path.join(__dirname, '../front')));
 
 // 3. Usa tus routers de la API
 app.use('/users', usuariosRouter);
+
+app.use('/products', productosRouter);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
