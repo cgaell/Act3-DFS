@@ -1,15 +1,17 @@
 const express = require('express');
-const path = require('path');
+const path = require('path'); // Importante para manejar rutas de carpetas
 const app = express();
 const PORT = 3000;
 
-// Servir archivos estáticos (HTML, CSS, JS) desde la carpeta actual
-app.use(express.static(__dirname));
+// 1. Importa tus rutas de JS (estos sí llevan require)
+const usuariosRouter = require('./users.js'); 
 
-// Ruta principal para cargar tu index.html
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+// 2. Configura la carpeta 'front' para que Express sirva el HTML, CSS y JS
+// Esto reemplaza la necesidad de hacer require del index.html
+app.use(express.static(path.join(__dirname, '../front')));
+
+// 3. Usa tus routers de la API
+app.use('/users', usuariosRouter);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
