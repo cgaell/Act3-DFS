@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router(); // crear el objeto router
 
 
-const { validateUserID } = require('./middleware.js');
+const { validateUserID, validateProductID } = require('./middleware.js');
 const { route } = require('./users.js');
 
 //ruta para la pagina principal de productos /productos
@@ -18,14 +18,14 @@ router.get('/', (req, res) => {
     })
 });
 
-router.post('/nuevo', validateUserID, (req, res) => {
+router.get('/nuevo', validateProductID, (req, res) => {
     res.status(201).json({
         message: 'Se agregó un nuevo producto',
         timestamp: new Date()
     });
 });
 
-router.post('/:id', validateUserID, (req, res) => {
+router.get('/:id', validateProductID, (req, res) => {
     //res.send(`Detalle del producto con ID: ${req.params.id}`);
     res.status(200).json({
         message: `Detalle del producto encontrado: ${req.params.id}`
