@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router(); // crear el objeto router
 
 
-const { validateUserID, validateProductID } = require('./middleware.js');
+const {validateProductID } = require('./middleware.js');
 const { route } = require('./users.js');
 
 //ruta para la pagina principal de productos /productos
@@ -33,3 +33,4 @@ router.get('/:id', validateProductID, (req, res) => {
 });
 
 module.exports = router; // exportar el router
+

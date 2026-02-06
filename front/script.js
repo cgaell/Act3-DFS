@@ -75,7 +75,7 @@ function resetForm() {
 }
 
 // CRUD Operations
-function createTask() {
+async function createTask() {
     const taskName = taskNameInput.value.trim();
     const status = statusInput.value;
     const assignedTo = assignedToInput.value.trim();
@@ -96,29 +96,73 @@ function createTask() {
         assignedDate
     };
 
-    todos.unshift(newTask);
-    saveTodos();
-    renderTasks();
-    updateCounts();
-    closeDialog();
-}
+    try {
+        const response = await fetch('/tareas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newTask)
+        });
 
-function deleteTask(id) {
-    if (confirm('Are you sure you want to delete this task?')) {
-        todos = todos.filter(todo => todo.id !== id);
-        saveTodos();
-        renderTasks();
-        updateCounts();
+        if (response.ok) {
+            todos.unshift(newTask);
+            renderTasks();
+            updateCounts();
+            closeDialog();
+        } else {
+            console.error('Error saving task to backend');
+            alert('Failed to save task');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error connecting to server');
     }
 }
 
-function updateTaskStatus(id, newStatus) {
+async function deleteTask(id) {
+    try {
+        const response = await fetch(`/tareas/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+            todos = todos.filter(todo => todo.id !== id);
+            renderTasks();
+            updateCounts();
+        } else {
+            alert('Failed to delete task');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error connecting to server');
+    }
+}
+
+async function updateTaskStatus(id, newStatus) {
     const task = todos.find(todo => todo.id === id);
     if (task) {
+        const oldStatus = task.status;
         task.status = newStatus;
-        saveTodos();
         renderTasks();
         updateCounts();
+
+        try {
+            const response = await fetch(`/tareas/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (!response.ok) {
+                task.status = oldStatus;
+                renderTasks();
+                updateCounts();
+                alert('Failed to update status');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            task.status = oldStatus;
+            renderTasks();
+            updateCounts();
+            alert('Error connecting to server');
+        }
     }
 }
 
@@ -245,14 +289,18 @@ function saveTodos() {
     localStorage.setItem('todos', JSON.stringify(todos));
 }
 
-function loadTodos() {
-    const savedTodos = localStorage.getItem('todos');
-    if (savedTodos) {
-        try {
-            todos = JSON.parse(savedTodos);
-        } catch (e) {
-            console.error('Failed to parse todos from localStorage');
-            todos = [];
-        }
+async function loadTodos() {
+    try {
+        const response = await fetch('/tareas');
+        if (!response.ok) throw new Error('Failed to fetch tasks');
+        const data = await response.json();
+        todos = data.tareas || [];
+        renderTasks();
+        updateCounts();
+    } catch (error) {
+        console.error('Error loading tasks:', error);
+        todos = [];
+        renderTasks();
+        updateCounts();
     }
 }

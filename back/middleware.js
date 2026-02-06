@@ -26,8 +26,20 @@ const validateProductID = (req, res, next) => {
     next();
 }
 
+
+const validateTaskID = (req, res, next) => {
+    const { id } = req.params;
+    if (id && id.length <= 3){
+        return res.status(402).json({ error: 'Formato de ID de tarea no valido. Debe de tener mas de 3 caracteres.' });
+    }
+
+    //si todo esta bien, continua
+    next();
+}
+
 module.exports = {
     logRequest,
     validateUserID,
-    validateProductID
+    validateProductID,
+    validateTaskID
 };

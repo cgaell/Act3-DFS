@@ -1,2 +1,0 @@
-aqui voy a inicializar el node dentro de la pagina web y despues voy a crear las vistas
-objetivo: poder levantar el node y emparejarlo con la pagina web, al igual que crearle un soporte para github page

@@ -9,6 +9,7 @@ const { logRequest } = require('./middleware.js');
 const usuariosRouter = require('./users.js'); 
 
 const productosRouter = require('./products.js');
+const tareasRouter = require('./tareas.js');
 
 app.use(logRequest); // Middleware global: SE COLOCA ANTES DE TODAS LAS RUTAS
 app.use(express.json()); // Middleware para parsear JSON
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, '../front')));
 app.use('/users', usuariosRouter);
 
 app.use('/products', productosRouter);
+app.use('/tareas', tareasRouter);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
