@@ -1,0 +1,21 @@
+const express = require('express');
+const router = express.Router();
+
+
+router.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    //simulacion de validacion en caso de que se maneje una base de datos
+    if ( username === 'admin' && password === '1234') {
+
+        //crear la sesion
+        req.session.user = { id: 1, name: 'admin' };
+        return res.status(200).json({ message: 'Inicio de sesión exitoso' });
+    }
+
+    return res.status(401).json({
+        error: 'Credenciales inválidas'
+    });
+});
+
+module.exports = router;

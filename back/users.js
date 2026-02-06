@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router(); // crear el objeto router
 
-const { validateUserID } = require('./middleware.js');
+const { validateUserID, validateSession } = require('./middleware.js');
 
 //ruta para la pagina principal de usuarios /usuarios
-router.get('/', (req, res) => {
+router.get('/', validateSession, (req, res) => {
     //res.send('Bienvenido a la pagina de usuarios');
 
     res.status(200).json({ total: 2 ,

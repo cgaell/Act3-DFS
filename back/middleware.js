@@ -37,9 +37,23 @@ const validateTaskID = (req, res, next) => {
     next();
 }
 
+const validateSession = (req, res, next) => {
+    //verificar si existe la propiedad 'user' en la sesion
+    if (req.session && req.session.user){
+        //si existe, continua
+        return next();
+    }
+    else {
+        return res.status(403).json({
+            error: 'Acceso denegado. Favor de iniciar sesion'
+        })
+    }
+};
+
 module.exports = {
     logRequest,
     validateUserID,
     validateProductID,
-    validateTaskID
+    validateTaskID,
+    validateSession
 };
