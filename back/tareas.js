@@ -1,3 +1,5 @@
+//CRUD de las tareas
+
 const express = require('express');
 const router = express.Router(); // crear el objeto router
 
@@ -16,6 +18,7 @@ router.get('/', (req, res) => {
     });
 });
 
+//ruta para crear una nueva tarea /tareas
 router.post('/', (req, res) => {
     const nuevaTarea = req.body;
     // Asignar ID si no viene (aunque el front lo está generando)
@@ -47,8 +50,8 @@ router.put('/:id', validateTaskID, (req, res) => {
 router.delete('/:id', validateTaskID, (req, res) => { 
     const { id } = req.params;
     const initialLength = tareas.length;
-    tareas = tareas.filter(t => t.id != id);
-    
+    tareas = tareas.filter(t => t.id != id); //filtra el id de las tareas que no tengan el id que se quiere eliminar
+    // si la longitud del arreglo es menor que la inicial que se actualizo, elimina la tarea
     if (tareas.length < initialLength) {
         res.status(200).json({ message: 'Tarea eliminada' });
     } else {
@@ -56,6 +59,7 @@ router.delete('/:id', validateTaskID, (req, res) => {
     }
 });
 
+//ruta para agregar una nueva tarea /tareas/nuevo (parte del ejemplo del jueves)
 router.get('/nuevo', validateTaskID, (req, res) => {
     res.status(201).json({
         message: 'Se agregó una nueva tarea',
@@ -63,6 +67,7 @@ router.get('/nuevo', validateTaskID, (req, res) => {
     });
 });
 
+//ruta para obtener los detalles de una tarea /tareas/:id
 router.get('/:id', validateTaskID, (req, res) => {
     //res.send(`Detalle del producto con ID: ${req.params.id}`);
     res.status(200).json({
