@@ -1,0 +1,2 @@
+1- hacer las funciones asincronas y promesas para no interrumpir los procesos del CRUD
+2- crear el login y register del middleware con bcryptjs
