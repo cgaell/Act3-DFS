@@ -39,7 +39,7 @@ const validateTaskID = (req, res, next) => {
 
 const validateSession = (req, res, next) => {
     //verificar si existe la propiedad 'user' en la sesion
-    if (req.session && req.session.user){
+    if (req.session &&  req.session.user &&req.session.user.name === 'admin') {
         //si existe, continua
         return next();
     }

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 
-router.post('/login', (req, res) => {
+router.post('/', (req, res) => {
     const { username, password } = req.body;
 
     //simulacion de validacion en caso de que se maneje una base de datos
