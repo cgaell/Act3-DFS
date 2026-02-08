@@ -142,6 +142,8 @@ body {
     background-color: green;
 }
 
+
+
 /* Task List */
 #taskList {
     display: flex;
@@ -423,6 +425,22 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
+}
+
+.auth-links {
+    margin-top: 16px;
+    text-align: center;
+}
+
+.auth-links .register-link {
+    color: #9E9E9E;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.auth-links .register-link:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
 }
 
 
