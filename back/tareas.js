@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
 const { validateTaskID } = require('./middleware.js');
-const { route } = require('./users.js');
+const { isAdmin } = require('./middleware.js');
 
 const DATA_PATH = path.join(__dirname, 'tareas.json');
 
@@ -69,7 +69,7 @@ router.put('/:id', validateTaskID, async (req, res) => {
     }
 });
 
-router.delete('/:id', validateTaskID, async (req, res) => {
+router.delete('/:id', validateTaskID, isAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const tareas = await readTareas();

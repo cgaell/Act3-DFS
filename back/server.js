@@ -4,6 +4,7 @@ const app = express();
 const session = require('express-session'); // Para manejar sesiones
 const PORT = 3000;
 const fs = require('fs').promises;
+const bcrypt = require('bcryptjs');
 
 const { logRequest, isAdmin } = require('./middleware.js');
 
@@ -30,7 +31,6 @@ app.get('/', (req, res) => {
     }
 });
 
-// 2. Configura la carpeta 'front' para que Express sirva el HTML, CSS y JS
 // Esto reemplaza la necesidad de hacer require del index.html
 app.use(express.static(path.join(__dirname, '../front')));
 
@@ -62,7 +62,9 @@ app.post('/register', (req, res) => {
         if (users.some(u => u.name === username)) {
             return res.status(409).json({ error: 'Usuario ya existe' });
         }
-        const user = { id: Date.now(), name: username, password, role: 'viewer' };
+        const saltRounds = 10;
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+        const user = { id: Date.now(), name: username, passwordHash, role: 'viewer' };
         users.push(user);
         try {
             await fs.writeFile(dataPath, JSON.stringify(users, null, 2), 'utf8');
