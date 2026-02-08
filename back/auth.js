@@ -18,4 +18,17 @@ router.post('/', (req, res) => {
     });
 });
 
+router.post('/register', (req, res) => {
+    const { username, password } = req.body;
+
+    //simulacion de validacion en caso de que se maneje una base de datos
+    if ( username === 'admin' && password === '1234') {
+        return res.status(200).json({ message: 'Registro exitoso' });
+    }
+
+    return res.status(401).json({
+        error: 'Error en el registro'
+    });
+});
+
 module.exports = router;
