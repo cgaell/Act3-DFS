@@ -38,15 +38,24 @@ const validateTaskID = (req, res, next) => {
 }
 
 const validateSession = (req, res, next) => {
-    //verificar si existe la propiedad 'user' en la sesion
-    if (req.session &&  req.session.user &&req.session.user.name === 'admin') {
-        //si existe, continua
+    // Solo verificamos que exista un usuario en la sesión
+    if (req.session && req.session.user) {
         return next();
+    } else {
+        return res.status(401).json({
+            error: 'Acceso denegado. Favor de iniciar sesión.'
+        });
     }
-    else {
+};
+
+const isAdmin = (req, res, next) => {
+    // Agregamos verificaciones previas para que no truene el servidor
+    if (req.session && req.session.user && req.session.user.role === 'admin') {
+        return next();
+    } else {
         return res.status(403).json({
-            error: 'Acceso denegado. Favor de iniciar sesion'
-        })
+            error: 'Acceso denegado. Se requiere sesión de administrador.'
+        });
     }
 };
 
@@ -55,5 +64,6 @@ module.exports = {
     validateUserID,
     validateProductID,
     validateTaskID,
-    validateSession
+    validateSession,
+    isAdmin
 };

@@ -4,7 +4,7 @@ const app = express();
 const session = require('express-session'); // Para manejar sesiones
 const PORT = 3000;
 
-const { logRequest } = require('./middleware.js');
+const { logRequest, isAdmin } = require('./middleware.js');
 
 // 1. Importa tus rutas de JS (estos sí llevan require)
 const usuariosRouter = require('./users.js'); 
@@ -30,7 +30,20 @@ app.use(express.static(path.join(__dirname, '../front')));
 app.use('/users', usuariosRouter);
 app.use('/login', authRouter);
 app.use('/products', productosRouter);
-app.use('/tareas', tareasRouter);
+app.use('/tareas',isAdmin, tareasRouter); // Solo admin puede acceder a tareas
+
+app.get('/admin/tareas', isAdmin, (req, res) => {
+    // Definimos la ruta hacia el archivo tareas.json
+    const filePath = path.join(__dirname, 'tareas.json');
+    
+    // Enviamos el archivo físico al cliente
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error("Error al enviar el archivo:", err);
+            res.status(500).json({ error: "No se encontró el archivo de tareas" });
+        }
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
