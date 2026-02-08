@@ -1,3 +1,8 @@
 [
-  
+  {
+    "id": 1770589931035,
+    "name": "gael",
+    "passwordHash": "$2b$10$it2aOf84GwzIilybbFvbSu0w9alE72LOGrDlH3U7rT0TFSN8Gf6wC",
+    "role": "viewer"
+  }
 ]
