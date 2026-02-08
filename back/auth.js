@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const fs = require('fs').promises;
+const bcrypt = require('bcryptjs');
 
 router.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../front/login.html'));
@@ -23,11 +24,20 @@ router.post('/', (req, res) => {
             } catch (err) {
                 if (err.code !== 'ENOENT') throw err;
             }
-            const found = users.find(u => u.name === username && u.password === password);
+            // buscar por nombre y verificar hash si existe
+            const found = users.find(u => u.name === username);
             if (found) {
-                req.session.user = { id: found.id, name: found.name, role: found.role || 'viewer' };
-                return res.status(200).json({ message: 'Bienvenido, Usuario' });
-            }
+                if (found.passwordHash) {
+                    const ok = await bcrypt.compare(password, found.passwordHash);
+                    if (ok) {
+                        req.session.user = { id: found.id, name: found.name, role: found.role || 'viewer' };
+                        return res.status(200).json({ message: 'Bienvenido, Usuario' });
+                    }
+                } else if (found.password === password) {
+                    req.session.user = { id: found.id, name: found.name, role: found.role || 'viewer' };
+                    return res.status(200).json({ message: 'Bienvenido, Usuario' });
+                }
+            } 
         } catch {}
         if (username === 'admin' && password === '1234') {
             req.session.user = { id: 1, name: 'admin', role: 'admin' };
