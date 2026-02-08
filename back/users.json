@@ -4,5 +4,17 @@
     "name": "gael",
     "passwordHash": "$2b$10$5O.iltl10PSa05Cp3W9dxOapYkjx6/pKryC1yhVafCrFRrbEGo0G6",
     "role": "viewer"
+  },
+  {
+    "id": 1770585366047,
+    "name": "hector",
+    "passwordHash": "$2b$10$0XS4AbQmAgAfiRVyajNf9ObMfb2idxP5uIkm4smJ1SshILMSDHmxu",
+    "role": "viewer"
+  },
+  {
+    "id": 1770585431699,
+    "name": "ola",
+    "passwordHash": "$2b$10$JiJv5jQutPs8Xn1dmEH15.uNAiu/JTFhBWsrqgoVxNtDcfu356qFG",
+    "role": "viewer"
   }
 ]
