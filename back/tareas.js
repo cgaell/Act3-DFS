@@ -5,8 +5,10 @@ const path = require('path');
 const { validateTaskID } = require('./middleware.js');
 const { isAdmin } = require('./middleware.js');
 
+//alineacion de las tareas por id al json
 const DATA_PATH = path.join(__dirname, 'tareas.json');
 
+//funcion para leer las tareas del json
 async function readTareas() {
     try {
         const data = await fs.readFile(DATA_PATH, 'utf8');
@@ -17,10 +19,12 @@ async function readTareas() {
     }
 }
 
+//funcion para poder agregar las tareas al json
 async function writeTareas(tareas) {
     await fs.writeFile(DATA_PATH, JSON.stringify(tareas, null, 2), 'utf8');
 }
 
+//endpoint para poder obtener las tareas
 router.get('/', async (req, res) => {
     try {
         const tareas = await readTareas();
@@ -33,6 +37,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+//funcion para poder agregar tareas
 router.post('/', async (req, res) => {
     try {
         const nuevaTarea = req.body;
@@ -51,6 +56,7 @@ router.post('/', async (req, res) => {
     }
 });
 
+//funcion para actualizar el status de la tarea
 router.put('/:id', validateTaskID, async (req, res) => {
     try {
         const { id } = req.params;
@@ -69,6 +75,7 @@ router.put('/:id', validateTaskID, async (req, res) => {
     }
 });
 
+//funcion para poder eliminar tareas
 router.delete('/:id', validateTaskID, isAdmin, async (req, res) => {
     try {
         const { id } = req.params;
@@ -86,6 +93,7 @@ router.delete('/:id', validateTaskID, isAdmin, async (req, res) => {
     }
 });
 
+//ejemplo de clase
 router.get('/nuevo', validateTaskID, (req, res) => {
     res.status(201).json({
         message: 'Se agregó una nueva tarea',
@@ -93,6 +101,7 @@ router.get('/nuevo', validateTaskID, (req, res) => {
     });
 });
 
+//ejemplo de clase
 router.get('/:id', validateTaskID, (req, res) => {
     res.status(200).json({
         message: `Detalle de la tarea encontrada: ${req.params.id}`
@@ -100,5 +109,5 @@ router.get('/:id', validateTaskID, (req, res) => {
 });
 
 
-
+//exportar el router
 module.exports = router;

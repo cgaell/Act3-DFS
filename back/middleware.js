@@ -5,6 +5,7 @@ const logRequest = (req, res, next) => {
     next();
 }
 
+// Ruta para obtener un usuario por ID
 const validateUserID = (req, res, next) => {
     const { id } = req.params;
     if (id && id.length <= 2){
@@ -15,7 +16,7 @@ const validateUserID = (req, res, next) => {
     next();
 }
 
-
+// Ruta para obtener una tarea por ID
 const validateTaskID = (req, res, next) => {
     const { id } = req.params;
     if (id && id.length <= 3){

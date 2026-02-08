@@ -4,20 +4,23 @@ const path = require('path');
 const fs = require('fs').promises;
 const bcrypt = require('bcryptjs');
 
+// Ruta para acceder a login.html
 router.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../front/login.html'));
 });
 
+// Ruta para acceder a register.html
 router.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, '../front/register.html'));
 });
 
+// crea un usuario
 router.post('/', (req, res) => {
     (async () => {
         const { username, password } = req.body;
         try {
             const dataPath = path.join(__dirname, 'users.json');
-            let users = [];
+            let users = []; // Inicializar como array vacío
             try {
                 const content = await fs.readFile(dataPath, 'utf8');
                 users = JSON.parse(content);
@@ -33,6 +36,8 @@ router.post('/', (req, res) => {
                         req.session.user = { id: found.id, name: found.name, role: found.role || 'viewer' };
                         return res.status(200).json({ message: 'Bienvenido, Usuario' });
                     }
+                    return res.status(401).json({ error: 'Contraseña incorrecta' });
+
                 } else if (found.password === password) {
                     req.session.user = { id: found.id, name: found.name, role: found.role || 'viewer' };
                     return res.status(200).json({ message: 'Bienvenido, Usuario' });
@@ -50,15 +55,6 @@ router.post('/', (req, res) => {
     })();
 });
 
-// Registro sencillo (simulado)
-router.post('/register', (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Username y password son requeridos' });
-    }
-    req.session.user = { id: Date.now(), name: username, role: 'viewer' };
-    return res.status(201).json({ message: 'Registro exitoso' });
-});
 
-
+//exportar router
 module.exports = router;

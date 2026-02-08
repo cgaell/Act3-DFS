@@ -3,15 +3,15 @@ const path = require('path'); // Importante para manejar rutas de carpetas
 const app = express();
 const session = require('express-session'); // Para manejar sesiones
 const PORT = 3000;
-const fs = require('fs').promises;
-const bcrypt = require('bcryptjs');
+const fs = require('fs').promises; //para manejar archivos
+const bcrypt = require('bcryptjs'); //para encriptar contraseñas
 
-const { logRequest, isAdmin } = require('./middleware.js');
+const { logRequest, isAdmin } = require('./middleware.js'); //importar middleware con logrequest y la validacion de que si es admin o no
 
-// 1. Importa tus rutas de JS (estos sí llevan require)
-const usuariosRouter = require('./users.js'); 
-const tareasRouter = require('./tareas.js');
-const authRouter = require('./auth.js');
+//Importar las rutas de JS 
+const usuariosRouter = require('./users.js'); //importar rutas de usuarios
+const tareasRouter = require('./tareas.js'); //importar rutas de tareas
+const authRouter = require('./auth.js'); //importar rutas de autenticacion
 
 app.use(logRequest); // Middleware global: SE COLOCA ANTES DE TODAS LAS RUTAS
 app.use(express.json()); // Middleware para parsear JSON
@@ -34,23 +34,23 @@ app.get('/', (req, res) => {
 // Esto reemplaza la necesidad de hacer require del index.html
 app.use(express.static(path.join(__dirname, '../front')));
 
-// 3. Usa tus routers de la API
+// usar enrutadores de JS para usuarios, autenticacion y tareas
 app.use('/users', usuariosRouter);
 app.use('/login', authRouter);
-app.use('/tareas', require('./middleware.js').validateSession, tareasRouter);
+app.use('/tareas', require('./middleware.js').validateSession, tareasRouter); //validar sesion antes de acceder a rutas de tareas
 
-app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, '../front/register.html'));
+app.get('/register', (req, res) => { //ruta para registrarse
+    res.sendFile(path.join(__dirname, '../front/register.html')); //enviar archivo register.html
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', (req, res) => { //ruta para registrarse
     (async () => {
         const { username, password } = req.body;
         if (!username || !password) {
             return res.status(400).json({ error: 'Username y password son requeridos' });
         }
-        const dataPath = path.join(__dirname, 'users.json');
-        let users = [];
+        const dataPath = path.join(__dirname, 'users.json'); //se guardan los datos posteados en users.json
+        let users = []; //se crea una lista vacia para los usuarios
         try {
             const content = await fs.readFile(dataPath, 'utf8');
             users = JSON.parse(content);
@@ -63,11 +63,11 @@ app.post('/register', (req, res) => {
             return res.status(409).json({ error: 'Usuario ya existe' });
         }
         const saltRounds = 10;
-        const passwordHash = await bcrypt.hash(password, saltRounds);
-        const user = { id: Date.now(), name: username, passwordHash, role: 'viewer' };
+        const passwordHash = await bcrypt.hash(password, saltRounds); //encriptar contraseña con bcrypt
+        const user = { id: Date.now(), name: username, passwordHash, role: 'viewer' }; //se crea un usuario con id, nombre, contraseña encriptada y rol viewer (usuario normal)
         users.push(user);
         try {
-            await fs.writeFile(dataPath, JSON.stringify(users, null, 2), 'utf8');
+            await fs.writeFile(dataPath, JSON.stringify(users, null, 2), 'utf8'); //guardar usuarios en users.json
         } catch {
             return res.status(500).json({ error: 'Error guardando usuarios' });
         }
@@ -76,11 +76,11 @@ app.post('/register', (req, res) => {
     })();
 });
 
-app.get('/admin/tareas', isAdmin, (req, res) => {
+app.get('/admin/tareas', isAdmin, (req, res) => { //ruta para acceder a tareas de admin
     // Definimos la ruta hacia el archivo tareas.json
-    const filePath = path.join(__dirname, 'tareas.json');
+    const filePath = path.join(__dirname, 'tareas.json'); //se guardan las tareas posteadas en tareas.json
     
-    // Enviamos el archivo físico al cliente
+    // Enviamos el archivo físico al navegador
     res.sendFile(filePath, (err) => {
         if (err) {
             console.error("Error al enviar el archivo:", err);

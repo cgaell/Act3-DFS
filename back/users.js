@@ -4,9 +4,9 @@ const fs = require('fs').promises;
 const path = require('path');
 const { validateUserID, validateSession } = require('./middleware.js');
 
-const DATA_PATH = path.join(__dirname, 'users.json');
+const DATA_PATH = path.join(__dirname, 'users.json'); //se guardan los datos posteados en users.json
 
-async function readUsers() {
+async function readUsers() { 
   try {
     const data = await fs.readFile(DATA_PATH, 'utf8');
     return JSON.parse(data);
@@ -15,7 +15,7 @@ async function readUsers() {
     throw err;
   }
 }
-
+// Ruta para obtener todos los usuarios
 router.get('/', validateSession, async (req, res) => {
   try {
     const usuarios = await readUsers();
@@ -25,6 +25,7 @@ router.get('/', validateSession, async (req, res) => {
   }
 });
 
+// Ruta para obtener un usuario por ID
 router.get('/:id', validateUserID, async (req, res) => {
   try {
     const usuarios = await readUsers();
@@ -39,4 +40,5 @@ router.get('/:id', validateUserID, async (req, res) => {
   }
 });
 
+//exportar router para ser usado en server.js
 module.exports = router;
