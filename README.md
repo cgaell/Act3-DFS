@@ -23,3 +23,8 @@ node server.js
 ```
 Y despues de eso, entras al localhost que te proporciona:
 > Servidor corriendo en http://localhost:3000
+
+
+# Que se observara y como llegar al administrador?
+* Primero, estara frente a un formulario de inicio de sesion, abajo habra un enlace que lo envia a un registro de cuenta, que lo redirige a la ruta de registro, terminando el registro regresa al inicio de sesion.
+* Despues, al emparejar sus credenciales, ya entrara al administrador.
