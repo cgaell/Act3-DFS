@@ -1,3 +1,8 @@
 [
-
+  {
+    "id": 1770584858565,
+    "name": "hector",
+    "passwordHash": "$2b$10$AoQMzQwlPvXhayu4f9IP7OomQPz/dCnScD07qJMKmne2b35KnVad2",
+    "role": "viewer"
+  }
 ]
