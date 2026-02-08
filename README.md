@@ -8,7 +8,7 @@ Consiste en una API hecha con Node.js en la que maneja un administrador de tarea
 
 
 ## Pasos para instalar:
-__como el sistema esta trabajado en localhost, se tienen que realizar los siguientes pasos:__
+__como la API esta trabajada en localhost, se tienen que realizar los siguientes pasos:__
 
 * 1- Descargar ZIP del repositorio
 * 2- Entrar a la terminal
