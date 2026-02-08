@@ -16,17 +16,6 @@ const validateUserID = (req, res, next) => {
 }
 
 
-const validateProductID = (req, res, next) => {
-    const { id } = req.params;
-    if (id && id.length <= 3){
-        return res.status(401).json({ error: 'Formato de ID de producto no valido. Debe de tener mas de 3 caracteres.' });
-    }
-
-    //si todo esta bien, continua
-    next();
-}
-
-
 const validateTaskID = (req, res, next) => {
     const { id } = req.params;
     if (id && id.length <= 3){
@@ -62,7 +51,6 @@ const isAdmin = (req, res, next) => {
 module.exports = {
     logRequest,
     validateUserID,
-    validateProductID,
     validateTaskID,
     validateSession,
     isAdmin

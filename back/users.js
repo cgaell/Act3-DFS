@@ -1,25 +1,42 @@
 const express = require('express');
-const router = express.Router(); // crear el objeto router
-
+const router = express.Router();
+const fs = require('fs').promises;
+const path = require('path');
 const { validateUserID, validateSession } = require('./middleware.js');
 
-//ruta para la pagina principal de usuarios /usuarios
-router.get('/', validateSession, (req, res) => {
-    //res.send('Bienvenido a la pagina de usuarios');
+const DATA_PATH = path.join(__dirname, 'users.json');
 
-    res.status(200).json({ total: 2 ,
-        usuarios: [{ id: "user01", nombre: "Ricardo Arturo" },
-            { id: "user02", nombre: "Juan Perez" }] // Aquí iría la lista de usuarios
-    })
+async function readUsers() {
+  try {
+    const data = await fs.readFile(DATA_PATH, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    if (err.code === 'ENOENT') return [];
+    throw err;
+  }
+}
+
+router.get('/', validateSession, async (req, res) => {
+  try {
+    const usuarios = await readUsers();
+    res.status(200).json({ total: usuarios.length, usuarios });
+  } catch {
+    res.status(500).json({ error: 'Error leyendo usuarios' });
+  }
 });
 
-
-router.get('/:id', validateUserID, (req, res) => {
-    //res.send(`Detalle del usuario con ID: ${req.params.id}`);
-    res.status(200).json({
-        message: `Detalle del usuario encontrado: ${req.params.id}`
-    })
+router.get('/:id', validateUserID, async (req, res) => {
+  try {
+    const usuarios = await readUsers();
+    const user = usuarios.find(u => String(u.id) === String(req.params.id));
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+  } catch {
+    res.status(500).json({ error: 'Error leyendo usuarios' });
+  }
 });
 
-
-module.exports = router; // exportar el router
+module.exports = router;

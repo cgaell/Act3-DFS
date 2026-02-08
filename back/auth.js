@@ -1,21 +1,53 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+const fs = require('fs').promises;
 
+router.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../front/login.html'));
+});
+
+router.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, '../front/register.html'));
+});
 
 router.post('/', (req, res) => {
+    (async () => {
+        const { username, password } = req.body;
+        try {
+            const dataPath = path.join(__dirname, 'users.json');
+            let users = [];
+            try {
+                const content = await fs.readFile(dataPath, 'utf8');
+                users = JSON.parse(content);
+            } catch (err) {
+                if (err.code !== 'ENOENT') throw err;
+            }
+            const found = users.find(u => u.name === username && u.password === password);
+            if (found) {
+                req.session.user = { id: found.id, name: found.name, role: found.role || 'viewer' };
+                return res.status(200).json({ message: 'Bienvenido, Usuario' });
+            }
+        } catch {}
+        if (username === 'admin' && password === '1234') {
+            req.session.user = { id: 1, name: 'admin', role: 'admin' };
+            return res.status(200).json({ message: 'Bienvenido, admin' });
+        } else if (username === 'user' && password === '5678') {
+            req.session.user = { id: 2, name: 'user', role: 'viewer' };
+            return res.status(200).json({ message: 'Bienvenido, Usuario' });
+        }
+        return res.status(401).json({ error: 'Credenciales inválidas' });
+    })();
+});
+
+// Registro sencillo (simulado)
+router.post('/register', (req, res) => {
     const { username, password } = req.body;
-
-    // Simulación de base de datos con roles
-    if (username === 'admin' && password === '1234') {
-        req.session.user = { id: 1, name: 'admin', role: 'admin' }; // Guardamos el rol admin
-        return res.status(200).json({ message: 'Bienvenido, admin' });
-    } 
-    else if (username === 'user' && password === '5678') {
-        req.session.user = { id: 2, name: 'user', role: 'viewer' }; // Usuario normal
-        return res.status(200).json({ message: 'Bienvenido, Usuario' });
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Username y password son requeridos' });
     }
-
-    return res.status(401).json({ error: 'Credenciales inválidas' });
+    req.session.user = { id: Date.now(), name: username, role: 'viewer' };
+    return res.status(201).json({ message: 'Registro exitoso' });
 });
 
 

@@ -22,6 +22,15 @@ const taskNameInput = document.getElementById('taskName');
 const statusInput = document.getElementById('status');
 const assignedToInput = document.getElementById('assignedTo');
 const assignedDateInput = document.getElementById('assignedDate');
+// Auth elements
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+const loginUsername = document.getElementById('loginUsername');
+const loginPassword = document.getElementById('loginPassword');
+const regUsername = document.getElementById('regUsername');
+const regPassword = document.getElementById('regPassword');
+const loginMessage = document.getElementById('loginMessage');
+const registerMessage = document.getElementById('registerMessage');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -37,6 +46,19 @@ function setupEventListeners() {
     closeDialogBtn.addEventListener('click', closeDialog);
     cancelBtn.addEventListener('click', closeDialog);
     createTaskBtn.addEventListener('click', createTask);
+    // Auth forms
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await loginUser();
+        });
+    }
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await registerUser();
+        });
+    }
     
     // Close modal when clicking outside
     taskDialog.addEventListener('click', (e) => {
@@ -57,6 +79,55 @@ function setupEventListeners() {
     });
 }
 
+async function loginUser() {
+    try {
+        const payload = {
+            username: loginUsername.value.trim(),
+            password: loginPassword.value
+        };
+        const res = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) {
+            loginMessage.textContent = data.message || 'Login exitoso';
+            loginMessage.style.color = 'lightgreen';
+        } else {
+            loginMessage.textContent = data.error || 'Login inválido';
+            loginMessage.style.color = '#E74C3C';
+        }
+    } catch (err) {
+        loginMessage.textContent = 'Error conectando al servidor';
+        loginMessage.style.color = '#E74C3C';
+    }
+}
+
+async function registerUser() {
+    try {
+        const payload = {
+            username: regUsername.value.trim(),
+            password: regPassword.value
+        };
+        const res = await fetch('/login/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok) {
+            registerMessage.textContent = data.message || 'Registro exitoso';
+            registerMessage.style.color = 'lightgreen';
+        } else {
+            registerMessage.textContent = data.error || 'Registro inválido';
+            registerMessage.style.color = '#E74C3C';
+        }
+    } catch (err) {
+        registerMessage.textContent = 'Error conectando al servidor';
+        registerMessage.style.color = '#E74C3C';
+    }
+}
 // Modal functions
 function openDialog() {
     taskDialog.classList.add('active');
