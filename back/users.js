@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
-const { validateUserID, validateSession } = require('./middleware.js');
+const { validateUserID, isAdmin } = require('./middleware.js');
 
 const DATA_PATH = path.join(__dirname, 'users.json'); //se guardan los datos posteados en users.json
 
@@ -16,7 +16,7 @@ async function readUsers() {
   }
 }
 // Ruta para obtener todos los usuarios
-router.get('/', validateSession, async (req, res) => {
+router.get('/', isAdmin, async (req, res) => {
   try {
     const usuarios = await readUsers();
     res.status(200).json({ total: usuarios.length, usuarios });
