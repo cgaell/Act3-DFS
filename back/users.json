@@ -16,5 +16,11 @@
     "name": "ola",
     "passwordHash": "$2b$10$JiJv5jQutPs8Xn1dmEH15.uNAiu/JTFhBWsrqgoVxNtDcfu356qFG",
     "role": "viewer"
+  },
+  {
+    "id": 1770585741361,
+    "name": "gael1",
+    "passwordHash": "$2b$10$kvPygLWrOZhyRf5.2qFwy.GhBGLUzhoaUeGjppJPBAQ1y6kLZO0lO",
+    "role": "viewer"
   }
 ]
