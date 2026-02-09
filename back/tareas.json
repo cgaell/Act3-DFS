@@ -7,5 +7,14 @@
     "createdBy": "System",
     "assignedTo": "admin",
     "assignedDate": "2026-02-08"
+  },
+  {
+    "id": "1770602952212",
+    "taskName": "Hacer la tarea",
+    "createdDate": "2026-02-09",
+    "status": "completed",
+    "createdBy": "System",
+    "assignedTo": "fernando rubio",
+    "assignedDate": "2026-02-17"
   }
 ]
